@@ -9,6 +9,7 @@ use weighted_selector::{WeightedSelector, WeightedSelectorIndex};
 fn weight() {
     let x = WeightedSelectorIndex::new([10, 5, 3].into());
 
+    assert_eq!(x.total(), 18);
     assert_eq!(x.select(1), Some(0));
     assert_eq!(x.select(9), Some(0));
     assert_eq!(x.select(17), Some(2));
@@ -24,7 +25,7 @@ enum TestEnum {
 
 #[test]
 fn weight_enum() {
-    let x = WeightedSelector::<TestEnum>::new(
+    let x = WeightedSelector::new(
         [
             (10, TestEnum::First),
             (33, TestEnum::Second),
@@ -33,6 +34,7 @@ fn weight_enum() {
         .into(),
     );
 
+    assert_eq!(x.total(), 47);
     assert_eq!(x.select(1), Some(&TestEnum::First));
     assert_eq!(x.select(9), Some(&TestEnum::First));
     assert_eq!(x.select(10), Some(&TestEnum::Second));

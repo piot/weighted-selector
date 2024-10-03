@@ -5,11 +5,20 @@
 
 pub struct WeightedSelectorIndex {
     weights: Vec<usize>,
+    total_size: usize,
 }
 
 impl WeightedSelectorIndex {
-    pub const fn new(weights: Vec<usize>) -> Self {
-        Self { weights }
+    pub fn new(weights: Vec<usize>) -> Self {
+        let total_size = weights.iter().sum();
+        Self {
+            weights,
+            total_size,
+        }
+    }
+
+    pub fn total(&self) -> usize {
+        self.total_size
     }
 
     pub fn select(&self, value: usize) -> Option<usize> {
@@ -28,13 +37,21 @@ impl WeightedSelectorIndex {
 
 pub struct WeightedSelector<T> {
     enums: Vec<(usize, T)>,
+    total_size: usize,
 }
 
 impl<T> WeightedSelector<T> {
-    pub const fn new(enums: Vec<(usize, T)>) -> Self {
-        Self { enums }
+    pub fn new(enums: Vec<(usize, T)>) -> Self {
+        let total_size = enums.iter().map(|(weight, _)| weight).sum();
+        Self { enums, total_size }
     }
 
+    #[inline]
+    pub fn total(&self) -> usize {
+        self.total_size
+    }
+
+    #[inline]
     pub fn select(&self, value: usize) -> Option<&T> {
         let mut cumulative = 0;
 
